@@ -1,0 +1,49 @@
+{
+  "name": "fiscaldata-js",
+  "version": "0.0.1-alpha",
+  "description": "A high level fiscal data model for building views on fiscal data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require babel-core/register --timeout 5000",
+    "build": "webpack --optimize-minimize --progress --colors",
+    "develop": "npm run build && webpack-dev-server --progress --colors --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openspending/fiscaldata-js.git"
+  },
+  "keywords": [
+    "fiscal",
+    "data",
+    "openspending"
+  ],
+  "author": "Open Knowledge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/openspending/fiscaldata-js/issues"
+  },
+  "homepage": "https://github.com/openspending/fiscaldata-js#readme",
+  "dependencies": {
+    "babel-core": "^6.1.4",
+    "babel-loader": "^6.2.0",
+    "babel-polyfill": "^6.1.4",
+    "babel-preset-es2015": "^6.1.4",
+    "bluebird": "^3.0.5",
+    "history": "^1.13.0",
+    "isomorphic-fetch": "^2.2.0",
+    "papaparse": "^4.1.2",
+    "ramda": "^0.18.0",
+    "redux": "^3.0.4",
+    "redux-logger": "^2.0.4",
+    "redux-thunk": "^1.0.0",
+    "webpack": "^1.12.6"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "jsdom": "^7.0.2",
+    "mocha": "^2.3.3",
+    "mocha-jsdom": "^1.0.0",
+    "redux-mock-store": "0.0.2",
+    "webpack-dev-server": "^1.12.1"
+  }
+}

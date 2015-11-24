@@ -1,3 +1,3 @@
-import fiscalData from './lib'
+import { actions, store } from './lib'
 
-export default fiscalData
+export { actions, store }
