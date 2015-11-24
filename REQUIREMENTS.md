@@ -106,38 +106,52 @@ into something like this:
 {
   "model": {
     "measures": {
-      "amount": {
-        "currency": "AUD"
+      "projected": {
+        "currency": "USD"
+      },
+      "adjusted": {
+        "currency": "USD"
       }
     },
     "dimensions": {
       "category": {
-        "type": "functional"
+        "type": "functional",
+        "values": ["Education", "Arts"] // Calculated from data.values
       },
       "year": {
-        "type": "date"
+        "type": "date",
+        "values": [2010, 2011, 2012, 2013, 2014] // Calculated from data.values
       }
     }
   },
   "data": {
-    "results": [
-      {"amount": 10, "year": 2010, "category": "Education"},
-      {"amount": 20, "year": 2011, "category": "Education"},
-      {"amount": 30, "year": 2012, "category": "Education"},
-      {"amount": 40, "year": 2013, "category": "Education"},
-      {"amount": 50, "year": 2014, "category": "Education"},
-      {"amount": 100, "year": 2010, "category": "Arts"},
-      {"amount": 200, "year": 2011, "category": "Arts"},
-      {"amount": 300, "year": 2012, "category": "Arts"},
-      {"amount": 400, "year": 2013, "category": "Arts"},
-      {"amount": 500, "year": 2014, "category": "Arts"}
+    "headers": ["projected", "adjusted", "year", "category"],
+    "values": [
+      {"projected": 10, "adjusted": 12, "year": 2010, "category": "Education"},
+      {"projected": 20, "adjusted": 12, "year": 2011, "category": "Education"},
+      {"projected": 30, "adjusted": 19, "year": 2012, "category": "Education"},
+      {"projected": 40, "adjusted": 34, "year": 2013, "category": "Education"},
+      {"projected": 50, "adjusted": 56, "year": 2014, "category": "Education"},
+      {"projected": 100, "adjusted": 397, "year": 2010, "category": "Arts"},
+      {"projected": 200, "adjusted": 299, "year": 2011, "category": "Arts"},
+      {"projected": 300, "adjusted": 302, "year": 2012, "category": "Arts"},
+      {"projected": 400, "adjusted": 376, "year": 2013, "category": "Arts"},
+      {"projected": 500, "adjusted": 617, "year": 2014, "category": "Arts"}
     ],
-    "codeLists": {
-      "measures": {},
-      "dimensions": {
-        "category": ["Education", "Arts"],
-        "year": [2010, 2011, 2012, 2013, 2014]
+    "selections": {
+      "measures": ["projected"], // always only one for measures
+      "dimensions": { // always at least one for dimensions
+        "filters": { "year": 2014 },
+        "sum": ["category"]
       }
+    },
+    "states": {
+      "previous": [], // sequence of data objects. filtered to a view state
+      "current": [ // The current data object for the view state
+        {"projected": 50, "adjusted": 56, "year": 2014, "category": "Education"},
+        {"projected": 500, "adjusted": 617, "year": 2014, "category": "Arts"}
+      ],
+      "future": [] // sequence of data objects. filtered to a view state
     }
   }
 }
