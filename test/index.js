@@ -28,10 +28,10 @@ const options = {
   },
   ui: {
     "selections": {
-      "measures": ["projected"],
+      "measures": [ "projected" ],
       "dimensions": {
-        "filters": { "year": 2014 },
-        "sum": ["category"]
+        "filters": [ { "AÑO": "2014" } ],
+        "groups": [ "PROGRAMA" ]
       }
     }
   }
@@ -104,32 +104,7 @@ describe('loaders', () => {
   jsdom()
 
   it('should parse csv to a json array', (done) => {
-    let dataSource = 'https://raw.githubusercontent.com/os-data/madrid-municipal-gastos/master/data/gastos_v40_2012-2015.csv'
-    let model = {
-      "measures": {
-        "IMPORTE": {
-          "currency": "USD"
-        }
-      },
-      "dimensions": {
-        "ECONOMICO": {
-          "type": "functional"
-        },
-        "PROGRAMA": {
-          "type": "program",
-        }
-      }
-    }
-    let ui = {
-      "selections": {
-        "measures": ["projected"],
-        "dimensions": {
-          "filters": { "year": 2014 },
-          "sum": ["category"]
-        }
-      }
-    }
-    loaders.csv(dataSource, model, ui)
+    loaders.csv(dataSource, options.model, options.ui)
       .then((result) => {
         expect(result).to.be.an('object')
         expect(result.data).to.be.an('object')
