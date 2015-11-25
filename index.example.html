@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>Fiscal Data JS Scratchpad</h1>
+    <script src="fiscalData.min.js"></script>
+    <script>
+      var store = fiscalData.store,
+      actions = fiscalData.actions,
+      action,
+      state,
+      dataSource = 'https://raw.githubusercontent.com/os-data/madrid-municipal-gastos/master/data/gastos_v40_2012-2015.csv',
+      // dataSource = 'https://raw.githubusercontent.com/os-data/boost-moldova/master/data/boost-moldova.csv',
+      // dataSource = 'https://raw.githubusercontent.com/os-data/boost-armenia/master/data/boost-armenia.csv',
+      // dataSource = 'https://raw.githubusercontent.com/os-data/boost-paraguay/master/data/boost_paraguay_-_municipalities_expenditure_v_1.1_2006-2013_en_0.csv',
+      options = {
+        format: 'csv',
+        ui: {
+          "selections": {
+            "measures": ["projected"],
+            "dimensions": {
+              "filters": { "year": 2014 },
+              "sum": ["category"]
+            }
+          }
+        },
+        model: {
+          "measures": {
+            "IMPORTE": {
+              "currency": "USD"
+            }
+          },
+          "dimensions": {
+            "ECONOMICO": {
+              "type": "functional"
+            },
+            "PROGRAMA": {
+              "type": "program",
+            }
+          }
+        }
+      };
+
+      store.dispatch(actions.initialiseStateTreeIfNeeded(dataSource, options));
+      store.subscribe(function() {
+        console.log('Use subscribe to listen for changes')
+        console.log(store.getState())
+      });
+
+    </script>
+  </body>
+</html>
