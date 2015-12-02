@@ -32,10 +32,10 @@ const options = {
   },
   ui: {
     "selections": {
-      "measures": [ "projected" ],
+      "measures":  "projected" ,
       "dimensions": {
         "filters": { "AÑO": "2014",  "PROGRAMA": "15101"},
-          "groups": [ "PROGRAMA" ]
+        "groups": [ "PROGRAMA" ]
       }
     }
   }
