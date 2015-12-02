@@ -1,6 +1,6 @@
 {
   "name": "fiscaldata-js",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2",
   "description": "A high level fiscal data model for building views on fiscal data.",
   "main": "index.js",
   "scripts": {
