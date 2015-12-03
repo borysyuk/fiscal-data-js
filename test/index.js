@@ -21,12 +21,15 @@ const options = {
     "dimensions": {
       "AÑO": {
         "type": "Year",
+        "title": "Year"
       },
       "ECONOMICO": {
-        "type": "functional"
+        "type": "functional",
+        "title": "Functional"
       },
       "PROGRAMA": {
         "type": "program",
+        "title": "Program"
       }
     }
   },
