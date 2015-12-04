@@ -1,3 +1,3 @@
-import { actions, store } from './lib'
+import { actions, store, loaders } from './lib'
 
-export { actions, store }
+export { actions, store, loaders}
