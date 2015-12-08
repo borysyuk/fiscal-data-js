@@ -9,7 +9,9 @@ import * as utils from '../lib/utils'
 import reducer, { defaultStateTree } from '../lib/reducers'
 
 const mockStore = configureStore([ thunkMiddleware ]);
-const dataSource = 'https://raw.githubusercontent.com/os-data/madrid-municipal-gastos/master/data/gastos_v40_2012-2015.csv'
+const dataSource = 'https://raw.githubusercontent.com/os-data/madrid-municipal-gastos/master/data/gastos_v40_2012-2015.csv';
+const fdp = 'https://raw.githubusercontent.com/os-data/madrid-municipal-gastos/master/datapackage.json';
+
 const options = {
   format: 'csv',
   model: {
@@ -20,16 +22,13 @@ const options = {
     },
     "dimensions": {
       "AÑO": {
-        "type": "Year",
-        "title": "Year"
+        "type": "Year"
       },
       "ECONOMICO": {
-        "type": "functional",
-        "title": "Functional"
+        "type": "functional"
       },
       "PROGRAMA": {
-        "type": "program",
-        "title": "Program"
+        "type": "program"
       }
     }
   },
@@ -44,7 +43,7 @@ const options = {
   }
 };
 
-describe.skip('actions', () => {
+describe('actions', () => {
   it('should create an action to set default data', () => {
     let data;
     let expectedAction = {
@@ -93,6 +92,7 @@ describe.skip('actions', () => {
 
 describe('reducers', () => {
   let data = {
+    packageUrl: '',
     flags: {},
     fields: {},
     values: [
@@ -230,80 +230,70 @@ describe('reducers', () => {
   });
 });
 
-describe.skip('dispatchers', () => {
+describe('dispatchers', () => {
   it('should dispatch an action to the store', (done) => {
     let payload;
-    let action = actions.setDefaultStateTree(payload);
+    let action = actions.setDefaultData(payload);
     let expectedActions = [ action ];
     let store = mockStore(defaultStateTree, expectedActions, done);
     store.dispatch(action)
   });
-
 });
 
-describe.skip('loaders', () => {
+describe('loaders', () => {
   // papaparse needs XMLHttpRequest, so jsdom
   jsdom()
 
   it('should parse csv to a json array', (done) => {
     loaders.csv(dataSource, options.model, options.ui)
       .then((result) => {
-        console.log('----------------------------------------------------');
-        console.log(utils.getDimensions(result));
-        console.log('----------------------------------------------------');
-        console.log(utils.getCurrentData(result));
-
         expect(result).to.be.an('object');
         expect(result.data).to.be.an('object');
-        expect(result.model).to.be.an('object')
-        expect(result.ui).to.be.an('object')
-        expect(result.data.headers).to.be.an('array')
-        expect(result.data.values).to.be.an('array')
-        expect(result.data.states).to.be.an('object')
-        _.forEach(result.data.states, (state) => {
-          expect(state).to.be.an('array')
-        })
-        _.forEach(result.model.dimensions, (dimension) => {
-          expect(dimension.values).to.be.an('array')
-        })
-        expect(result.ui.selections).to.be.an('object')
-        expect(result.ui.selections.measures).to.be.an('array')
-        expect(result.ui.selections.dimensions).to.be.an('object')
-        done()
+        expect(result.ui).to.be.an('object');
+        expect(result.data.values).to.be.an('array');
+        _.forEach(result.data.model.dimensions, (dimension) => {
+          expect(dimension.values).to.be.an('array');
+        });
+        expect(result.ui.selections).to.be.an('object');
+        expect(result.ui.selections.measures).to.be.an('array');
+        expect(result.ui.selections.dimensions).to.be.an('object');
+        expect(result.ui.selections.dimensions.filters).to.be.an('object');
+        expect(result.ui.selections.dimensions.groups).to.be.an('array');
+        done();
       })
   })
 });
 
-describe.skip('loaders', () => {
+describe('loaders', () => {
   // papaparse needs XMLHttpRequest, so jsdom
   jsdom()
 
   it('should parse fdp to a json array', (done) => {
 
-    loaders.fdp('http://localhost:8080/dist/fdp.json', options.ui)
+    loaders.fdp(fdp)
       .then((result) => {
         console.log('----------------------------------------------------');
         //console.log(utils.getDimensions(result));
         //console.log('----------------------------------------------------');
         //console.log(utils.getCurrentData(result));
-        console.log(result.data.headers);
+        console.log(result.data.packageUrl);
 
-        expect(result).to.be.an('object');
-        expect(result.data).to.be.an('object');
-        expect(result.model).to.be.an('object')
-        expect(result.ui).to.be.an('object')
-        expect(result.data.headers).to.be.an('array')
-        expect(result.data.values).to.be.an('array')
-        expect(result.data.states).to.be.an('object')
-        _.forEach(result.data.states, (state) => {
-          expect(state).to.be.an('array')
-        })
-        _.forEach(result.model.dimensions, (dimension) => {
-          expect(dimension.values).to.be.an('array')
-        })
-        expect(result.ui.selections).to.be.an('object')
-        expect(result.ui.selections.measures).to.be.an('array')
-        expect(result.ui.selections.dimensions).to.be.an('object')
+        //expect(result).to.be.an('object');
+        //expect(result.data).to.be.an('object');
+        //expect(result.model).to.be.an('object')
+        //expect(result.ui).to.be.an('object')
+        //expect(result.data.headers).to.be.an('array')
+        //expect(result.data.values).to.be.an('array')
+        //expect(result.data.states).to.be.an('object')
+        //_.forEach(result.data.states, (state) => {
+        //  expect(state).to.be.an('array')
+        //})
+        //_.forEach(result.model.dimensions, (dimension) => {
+        //  expect(dimension.values).to.be.an('array')
+        //})
+        //expect(result.ui.selections).to.be.an('object')
+        //expect(result.ui.selections.measures).to.be.an('array')
+        //expect(result.ui.selections.dimensions).to.be.an('object')
         done()
       })
   })
