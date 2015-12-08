@@ -240,7 +240,7 @@ describe('dispatchers', () => {
   });
 });
 
-describe('loaders', () => {
+describe('loaders', function() {
   // papaparse needs XMLHttpRequest, so jsdom
   jsdom()
 
@@ -261,40 +261,62 @@ describe('loaders', () => {
         expect(result.ui.selections.dimensions.groups).to.be.an('array');
         done();
       })
-  })
-});
+  });
 
-describe('loaders', () => {
-  // papaparse needs XMLHttpRequest, so jsdom
-  jsdom()
+  this.timeout(20000);
 
   it('should parse fdp to a json array', (done) => {
-
     loaders.fdp(fdp)
       .then((result) => {
-        console.log('----------------------------------------------------');
-        //console.log(utils.getDimensions(result));
-        //console.log('----------------------------------------------------');
-        //console.log(utils.getCurrentData(result));
-        console.log(result.data.packageUrl);
+        expect(result.data.packageUrl).to.be.equal(fdp);
 
-        //expect(result).to.be.an('object');
-        //expect(result.data).to.be.an('object');
-        //expect(result.model).to.be.an('object')
-        //expect(result.ui).to.be.an('object')
-        //expect(result.data.headers).to.be.an('array')
-        //expect(result.data.values).to.be.an('array')
-        //expect(result.data.states).to.be.an('object')
-        //_.forEach(result.data.states, (state) => {
-        //  expect(state).to.be.an('array')
-        //})
-        //_.forEach(result.model.dimensions, (dimension) => {
-        //  expect(dimension.values).to.be.an('array')
-        //})
-        //expect(result.ui.selections).to.be.an('object')
-        //expect(result.ui.selections.measures).to.be.an('array')
-        //expect(result.ui.selections.dimensions).to.be.an('object')
+        expect(result.data.fields).to.be.an('object');
+        _.forEach(result.data.fields, (field) => {
+          expect(field).to.be.an('object');
+        });
+
+        expect(result).to.be.an('object');
+        expect(result.data).to.be.an('object');
+        expect(result.ui).to.be.an('object');
+        expect(result.data.values).to.be.an('array');
+        _.forEach(result.data.model.dimensions, (dimension) => {
+          expect(dimension.values).to.be.an('array');
+        });
+        expect(result.ui.selections).to.be.an('object');
+        expect(result.ui.selections.measures).to.be.an('array');
+        expect(result.ui.selections.dimensions).to.be.an('object');
+        expect(result.ui.selections.dimensions.filters).to.be.an('object');
+        expect(result.ui.selections.dimensions.groups).to.be.an('array');
+
         done()
       })
-  })
+  });
+
+  it('should works using cors proxy', (done) => {
+    loaders.fdp(fdp, undefined, {proxy: 'http://gobetween.oklabs.org/pipe/{url}'})
+      .then((result) => {
+        expect(result.data.packageUrl).to.be.equal(fdp);
+
+        expect(result.data.fields).to.be.an('object');
+        _.forEach(result.data.fields, (field) => {
+          expect(field).to.be.an('object');
+        });
+
+        expect(result).to.be.an('object');
+        expect(result.data).to.be.an('object');
+        expect(result.ui).to.be.an('object');
+        expect(result.data.values).to.be.an('array');
+        _.forEach(result.data.model.dimensions, (dimension) => {
+          expect(dimension.values).to.be.an('array');
+        });
+        expect(result.ui.selections).to.be.an('object');
+        expect(result.ui.selections.measures).to.be.an('array');
+        expect(result.ui.selections.dimensions).to.be.an('object');
+        expect(result.ui.selections.dimensions.filters).to.be.an('object');
+        expect(result.ui.selections.dimensions.groups).to.be.an('array');
+
+        done()
+      })
+  });
+
 });
