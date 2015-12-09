@@ -45,21 +45,12 @@ const options = {
 
 describe('actions', () => {
   it('should create an action to set default data', () => {
-    let data;
+    let stateTree;
     let expectedAction = {
-      type: actions.SET_DEFAULT_DATA,
-      data: data
+      type: actions.SET_DEFAULT_STATE,
+      stateTree: stateTree
     };
-    expect(actions.setDefaultData(data)).to.deep.equal(expectedAction)
-  });
-
-  it('should create an action to set default ui', () => {
-    let data;
-    let expectedAction = {
-      type: actions.SET_DEFAULT_UI,
-      ui: data
-    };
-    expect(actions.setDefaultUi(data)).to.deep.equal(expectedAction)
+    expect(actions.setDefaultState(stateTree)).to.deep.equal(expectedAction)
   });
 
   it('should create an action to select measure', () => {
@@ -118,122 +109,129 @@ describe('reducers', () => {
     }
   };
 
+  let stateTree = {
+    data: data,
+    ui: ui
+  };
+
   it('should reset the data state to the default state', () => {
     let data;
-    let newStateTree = reducer(undefined, actions.setDefaultData(data));
-    expect(newStateTree).to.deep.equal(defaultStateTree);
+    let newStateTree = reducer(undefined, actions.setDefaultState(data));
+    expect(newStateTree.app.present).to.deep.equal(defaultStateTree);
   });
 
   it('should update the store with new data and set flag "isLoaded" in true', () => {
-    let expectedStateTree = Object.assign({}, defaultStateTree, {data: _.cloneDeep(data)});
-    let newStateTree = reducer(undefined, actions.setDefaultData(data));
-
-    expect(newStateTree.data.flags.isLoaded).to.equal(true);
+    let expectedStateTree = Object.assign({}, defaultStateTree, {stateTree: _.cloneDeep(stateTree)});
+    let newStateTree = reducer(undefined, actions.setDefaultState(stateTree));
+    expect(newStateTree.app.present.data.flags.isLoaded).to.equal(true);
+    expect(newStateTree.app.present.data.values).to.not.equal('');
 
     expectedStateTree.data.flags.isLoaded = true;
-    expect(newStateTree).to.deep.equal(expectedStateTree);
+    expectedStateTree.data.values = newStateTree.app.present.data.values;
+
+    expect(newStateTree.app.present.data).to.deep.equal(expectedStateTree.data);
   });
 
 
   it('should update the ui store with new measure', () => {
     let newStateTree = reducer(undefined, actions.selectMeasure({field1: 1}));
-    expect(newStateTree.ui.selections.measures).to.deep.equal(['field1']);
+    expect(newStateTree.app.present.ui.selections.measures).to.deep.equal(['field1']);
   });
 
   it('should replace old measure by new one', () => {
     let newStateTree = reducer(undefined, actions.selectMeasure({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.selectMeasure({field2: 1}));
-    expect(newStateTree2.ui.selections.measures).to.deep.equal(['field2']);
+    expect(newStateTree2.app.present.ui.selections.measures).to.deep.equal(['field2']);
   });
 
   it('should keep old measure if you want replace it by empty object', () => {
     let newStateTree = reducer(undefined, actions.selectMeasure({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.selectMeasure({}));
-    expect(newStateTree2.ui.selections.measures).to.deep.equal(['field1']);
+    expect(newStateTree2.app.present.ui.selections.measures).to.deep.equal(['field1']);
   });
 
 
   it('should update the ui store with new dimensions', () => {
     let newStateTree = reducer(undefined, actions.setDimensionFilter({field1: 1}));
-    expect(newStateTree.ui.selections.dimensions.filters).to.deep.equal({field1:1});
+    expect(newStateTree.app.present.ui.selections.dimensions.filters).to.deep.equal({field1:1});
   });
 
   it('should replace old value of current dimension filter by new one', () => {
     let newStateTree = reducer(undefined, actions.setDimensionFilter({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setDimensionFilter({field1: 3}));
-    expect(newStateTree2.ui.selections.dimensions.filters).to.deep.equal({field1:3});
+    expect(newStateTree2.app.present.ui.selections.dimensions.filters).to.deep.equal({field1:3});
   });
 
   it('should add new dimension filter to existing one ', () => {
     let newStateTree = reducer(undefined, actions.setDimensionFilter({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setDimensionFilter({field2: 3}));
-    expect(newStateTree2.ui.selections.dimensions.filters).to.deep.equal({field1:1, field2: 3});
+    expect(newStateTree2.app.present.ui.selections.dimensions.filters).to.deep.equal({field1:1, field2: 3});
   });
 
   it('should modify value of one dimension and do not modify another values', () => {
     let newStateTree = reducer(undefined, actions.setDimensionFilter({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setDimensionFilter({field2: 3}));
     let newStateTree3 = reducer(newStateTree2, actions.setDimensionFilter({field1: 3}));
-    expect(newStateTree3.ui.selections.dimensions.filters).to.deep.equal({field1:3, field2: 3});
+    expect(newStateTree3.app.present.ui.selections.dimensions.filters).to.deep.equal({field1:3, field2: 3});
   });
 
   it('should delete one dimension filter  and do not modify another', () => {
     let newStateTree = reducer(undefined, actions.setDimensionFilter({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setDimensionFilter({field2: 3}));
     let newStateTree3 = reducer(newStateTree2, actions.setDimensionFilter({field1: null}));
-    expect(newStateTree3.ui.selections.dimensions.filters).to.deep.equal({field2: 3});
+    expect(newStateTree3.app.present.ui.selections.dimensions.filters).to.deep.equal({field2: 3});
   });
 
   it('should delete last dimension filter', () => {
     let newStateTree = reducer(undefined, actions.setDimensionFilter({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setDimensionFilter({field1: null}));
-    expect(newStateTree2.ui.selections.dimensions.filters).to.deep.equal({});
+    expect(newStateTree2.app.present.ui.selections.dimensions.filters).to.deep.equal({});
   });
 
 
 
   it('should update the ui store with new dimension groups', () => {
     let newStateTree = reducer(undefined, actions.setGroupField({field1: 1}));
-    expect(newStateTree.ui.selections.dimensions.groups).to.deep.equal(['field1']);
+    expect(newStateTree.app.present.ui.selections.dimensions.groups).to.deep.equal(['field1']);
   });
 
   it('should add new dimension group to existing one ', () => {
     let newStateTree = reducer(undefined, actions.setGroupField({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setGroupField({field2: 1}));
-    expect(newStateTree2.ui.selections.dimensions.groups).to.deep.equal(['field1', 'field2']);
+    expect(newStateTree2.app.present.ui.selections.dimensions.groups).to.deep.equal(['field1', 'field2']);
   });
 
   it('should delete one dimension group  and do not modify another', () => {
     let newStateTree = reducer(undefined, actions.setGroupField({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setGroupField({field2: 1}));
     let newStateTree3 = reducer(newStateTree2, actions.setGroupField({field1: null}));
-    expect(newStateTree3.ui.selections.dimensions.groups).to.deep.equal(['field2']);
+    expect(newStateTree3.app.present.ui.selections.dimensions.groups).to.deep.equal(['field2']);
   });
 
   it('should delete last dimension group', () => {
     let newStateTree = reducer(undefined, actions.setGroupField({field1: 1}));
     let newStateTree2 = reducer(newStateTree, actions.setGroupField({field1: null}));
-    expect(newStateTree2.ui.selections.dimensions.groups).to.deep.equal([]);
+    expect(newStateTree2.app.present.ui.selections.dimensions.groups).to.deep.equal([]);
   });
 
   it('should reset current state tree to default one', () => {
-    let clonedData = _.cloneDeep(data);
+    let clonedData = _.cloneDeep(stateTree);
 
-    let newStateTree = reducer(undefined, actions.setDefaultData(clonedData));
-    let newStateTree2 = reducer(newStateTree, actions.setDefaultUi(ui));
-    clonedData.flags.isLoaded = true;
-    expect(newStateTree2.data).to.deep.equal(clonedData);
-    expect(newStateTree2.ui).to.deep.equal(ui);
-    let newStateTree3 = reducer(newStateTree2, actions.resetStateTree());
+    let newStateTree = reducer(undefined, actions.setDefaultState(clonedData));
+    clonedData.data.flags.isLoaded = true;
+    clonedData.data.values = newStateTree.app.present.data.values;
 
-    expect(newStateTree3).to.deep.equal(defaultStateTree);
+    expect(newStateTree.app.present.data).to.deep.equal(clonedData.data);
+
+    let newStateTree2 = reducer(newStateTree, actions.resetStateTree());
+    expect(newStateTree2.app.present).to.deep.equal(defaultStateTree);
   });
 });
 
 describe('dispatchers', () => {
   it('should dispatch an action to the store', (done) => {
     let payload;
-    let action = actions.setDefaultData(payload);
+    let action = actions.setDefaultState(payload);
     let expectedActions = [ action ];
     let store = mockStore(defaultStateTree, expectedActions, done);
     store.dispatch(action)
