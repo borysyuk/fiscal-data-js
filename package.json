@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --require babel-core/register --timeout 5000 test/*",
     "build": "webpack --optimize-minimize --progress --colors",
-    "develop": "npm run build && webpack-dev-server --progress --colors --watch"
+    "develop": "npm run build && webpack-dev-server --progress --colors --watch",
+    "review": "jscs src"
   },
   "repository": {
     "type": "git",
@@ -37,10 +38,12 @@
     "redux": "^3.0.4",
     "redux-logger": "^2.0.4",
     "redux-thunk": "^1.0.0",
+    "redux-undo": "^0.5.0",
     "webpack": "^1.12.6"
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "jscs": "^2.7.0",
     "jsdom": "^7.0.2",
     "mocha": "^2.3.3",
     "mocha-jsdom": "^1.0.0",
