@@ -10,5 +10,6 @@
   "requireSpaceBetweenArguments": true,
   "requireSpaceAfterKeywords": true,
   "requireSpacesInsideBrackets": true,
-  "requireSpaceBetweenArguments": true
+  "requireSpaceBetweenArguments": true,
+  "validateQuoteMarks": "'"
 }
