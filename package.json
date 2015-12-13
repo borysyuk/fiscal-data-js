@@ -7,7 +7,8 @@
     "test": "mocha --require babel-core/register --timeout 5000 test/*",
     "build": "webpack --optimize-minimize --progress --colors",
     "develop": "npm run build && webpack-dev-server --progress --colors --watch",
-    "review": "jscs src"
+    "review": "jscs lib",
+    "fix": "jscs lib --fix"
   },
   "repository": {
     "type": "git",
