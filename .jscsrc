@@ -1,4 +1,14 @@
 {
-  "preset": "google",
-  "esnext": true
+  "esnext": true,
+  "disallowSemicolons": true,
+  "requireCamelCaseOrUpperCaseIdentifiers": true,
+  "requireDotNotation": true,
+  "requireCurlyBraces": true,
+  "requireSpaceAfterBinaryOperators": true,
+  "requireSpaceBeforeBinaryOperators": true,
+  "requireSpaceAfterComma": { "allExcept": [ "trailing" ] },
+  "requireSpaceBetweenArguments": true,
+  "requireSpaceAfterKeywords": true,
+  "requireSpacesInsideBrackets": true,
+  "requireSpaceBetweenArguments": true
 }
