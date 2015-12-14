@@ -83,8 +83,12 @@ describe('actions', () => {
 
 describe('reducers', () => {
   let data = {
-    packageUrl: '',
-    flags: {},
+    meta: {
+      url: '',
+      title: '',
+      description: '',
+      resources: []
+    },
     fields: {},
     values: [
       {'id': 1, 'amount': 25.50, 'category': 'Education'},
@@ -120,13 +124,12 @@ describe('reducers', () => {
     expect(newStateTree.app.present).to.deep.equal(defaultStateTree)
   })
 
-  it('should update the store with new data and set flag "isLoaded" in true', () => {
+  it('should update the store with new data', () => {
     let expectedStateTree = Object.assign({}, defaultStateTree, {stateTree: _.cloneDeep(stateTree)})
     let newStateTree = reducer(undefined, actions.setDefaultState(stateTree))
-    expect(newStateTree.app.present.data.flags.isLoaded).to.equal(true)
+
     expect(newStateTree.app.present.data.values).to.not.equal('')
 
-    expectedStateTree.data.flags.isLoaded = true
     expectedStateTree.data.values = newStateTree.app.present.data.values
 
     expect(newStateTree.app.present.data).to.deep.equal(expectedStateTree.data)
@@ -266,15 +269,23 @@ describe('loaders', function () {
   it('should parse fdp to a json array', (done) => {
     loaders.fdp(fdp)
       .then((result) => {
-        expect(result.data.packageUrl).to.be.equal(fdp)
+
+        expect(result).to.be.an('object')
+        expect(result.data).to.be.an('object')
+
+        expect(result.data.meta).to.be.an('object')
+        expect(result.data.meta.url).to.be.equal(fdp)
+        expect(result.data.meta.title).to.be.not.equal('')
+        expect(result.data.meta.resources).to.be.an('array')
+        _.forEach(result.data.meta.resources, (resource) => {
+          expect(resource).to.be.an('object')
+        })
 
         expect(result.data.fields).to.be.an('object')
         _.forEach(result.data.fields, (field) => {
           expect(field).to.be.an('object')
         })
 
-        expect(result).to.be.an('object')
-        expect(result.data).to.be.an('object')
         expect(result.ui).to.be.an('object')
         expect(result.data.values).to.be.an('array')
         _.forEach(result.data.model.dimensions, (dimension) => {
@@ -290,7 +301,7 @@ describe('loaders', function () {
       })
   })
 
-  it('should works using cors proxy', (done) => {
+  it.skip('should works using cors proxy', (done) => { //proxy has been disabled
     loaders.fdp(fdp, undefined, {proxy: 'http://gobetween.oklabs.org/pipe/{url}'})
       .then((result) => {
         expect(result.data.packageUrl).to.be.equal(fdp)
