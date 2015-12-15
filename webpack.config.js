@@ -4,7 +4,7 @@ module.exports = {
   devtool: "source-map",
   output: {
       path: __dirname + '/dist',
-      filename: 'fiscalData.min.js',
+      filename: 'fiscalData.js',
       library: 'fiscalData'
   },
   module: {

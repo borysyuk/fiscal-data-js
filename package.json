@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require babel-core/register --timeout 5000 test/*",
-    "build": "webpack --optimize-minimize --progress --colors",
+    "build": "webpack --progress --colors",
     "develop": "npm run build && webpack-dev-server --progress --colors --watch",
     "review": "jscs lib test",
     "fix": "jscs lib test --fix"
