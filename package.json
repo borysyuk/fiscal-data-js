@@ -2,10 +2,11 @@
   "name": "fiscaldata-js",
   "version": "0.0.5",
   "description": "A high level fiscal data model for building views on fiscal data.",
-  "main": "dist/fiscalData.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "mocha --require babel-core/register --timeout 5000 test/*",
     "build": "webpack --progress --colors",
+    "prepublish": "babel index.js lib --out-dir dist",
     "develop": "npm run build && webpack-dev-server --progress --colors --watch",
     "review": "jscs lib test",
     "fix": "jscs lib test --fix"
@@ -43,6 +44,8 @@
     "webpack": "^1.12.6"
   },
   "devDependencies": {
+    "babel": "^6.3.13",
+    "babel-cli": "^6.3.17",
     "chai": "^3.4.1",
     "jscs": "^2.7.0",
     "jsdom": "^7.0.2",
