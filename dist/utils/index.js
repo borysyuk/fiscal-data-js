@@ -49,7 +49,7 @@ function getModelFromFDP(fdp) {
   _lodash2.default.forEach(fdp.mapping.dimensions, function (dimension) {
     _lodash2.default.forEach(dimension.attributes, function (attribute) {
       var field = _lodash2.default.first(_lodash2.default.values(attribute));
-      result.dimensions[field.source] = { 'type': _lodash2.default.first(_lodash2.default.keys(attribute)) };
+      result.dimensions[field] = { 'type': _lodash2.default.first(_lodash2.default.keys(attribute)) };
     });
   });
 
